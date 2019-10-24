@@ -1,35 +1,35 @@
 {
-  "name": "generator-mens",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-	"generate-crud": "plop crud",
-	"check": "nomad-codecheck ./",
-	"clean": "npm run check"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-	"plop": "^2.5.2",
-    "handlebars-helpers": "^0.10.0",
-	"yaml": "^1.7.2"
-  },
-  "devDependencies": {
-	"@commitlint/cli": "^8.2.0",
-	"commitlint-config-nomad": "git+ssh://git@ship.nomadinteractive.co:nomad-interactive/commitlint-config-nomad.git",
-	"husky": "^3.0.9",
-	"nomad-codecheck": "git+ssh://git@ship.nomadinteractive.co:nomad-interactive/nomad-codecheck.git"
-  },
-  "commitlint": {
-	"extends": [
-	"nomad"
-	]
-  },
-  "husky": {
-	"hooks": {
-	  "pre-commit": "npm run clean",
-	  "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-	}
+ "name": "generator-mens",
+ "version": "1.0.0",
+ "description": "",
+ "main": "index.js",
+ "scripts": {
+  "generate-crud": "plop crud",
+  "check": "nomad-codecheck ./",
+  "clean": "npm run check"
+ },
+ "author": "",
+ "license": "ISC",
+ "dependencies": {
+  "plop": "^2.5.2",
+  "handlebars-helpers": "^0.10.0",
+  "yaml": "^1.7.2"
+ },
+ "devDependencies": {
+  "@commitlint/cli": "^8.2.0",
+  "commitlint-config-nomad": "git+ssh://git@ship.nomadinteractive.co:nomad-interactive/commitlint-config-nomad.git",
+  "husky": "^3.0.9",
+  "nomad-codecheck": "git+ssh://git@ship.nomadinteractive.co:nomad-interactive/nomad-codecheck.git"
+ },
+ "commitlint": {
+  "extends": [
+   "nomad"
+  ]
+ },
+ "husky": {
+  "hooks": {
+   "pre-commit": "npm run clean",
+   "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
   }
+ }
 }
