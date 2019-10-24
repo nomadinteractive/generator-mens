@@ -1,0 +1,38 @@
+import { check } from 'express-validator/check'
+
+export default (container) => {
+	// eslint-disable-next-line no-unused-vars
+	const { db } = container
+
+	return {
+		get{{ pascalCase (getPluralName yml) }}: [],
+
+		get{{ pascalCase (getSingularName yml) }}: [
+			check('{{ getPKey yml }}', '{{ getPKey yml }} key is missing')
+				.exists()
+				.withMessage('{{ getPKey yml }} key is required'),
+		],
+
+		create{{ pascalCase (getSingularName yml) }}: [
+			{{#each (getRequiredFieldsExceptPkey yml)}}
+			check('{{ @key }}', 'Missing or invalid {{ @key }}')
+				.exists()
+				.withMessage('{{ @key }} is required'),
+			{{/each}}
+		],
+
+		update{{ pascalCase (getSingularName yml) }}: [
+			{{#each (getRequiredFields yml)}}
+			check('{{ @key }}', 'Missing or invalid {{ @key }}')
+				.exists()
+				.withMessage('{{ @key }} is required'),
+			{{/each}}
+		],
+
+		delete{{ pascalCase (getSingularName yml) }}: [
+			check('{{ getPKey yml }}', '{{ getPKey yml }} is missing')
+				.exists()
+				.withMessage('{{ getPKey yml }} key is required'),
+		],
+	}
+}

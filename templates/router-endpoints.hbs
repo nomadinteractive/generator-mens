@@ -1,0 +1,19 @@
+	// {{ titleCase (getPluralName yml) }}
+	routes.get('{{ getEndpointPrefix yml }}{{ camelCase (getPluralName yml) }}',
+		[{{ pascalCase (getPluralName yml) }}Validators.get{{ pascalCase (getPluralName yml) }}, authRequired],
+		{{ pascalCase (getPluralName yml) }}Controller.get{{ pascalCase (getPluralName yml) }})
+	routes.get('{{ getEndpointPrefix yml }}{{ camelCase (getPluralName yml) }}/:{{ getPKeyParameter yml }}',
+		[{{ pascalCase (getPluralName yml) }}Validators.get{{ pascalCase (getSingularName yml) }}, authRequired],
+		{{ pascalCase (getPluralName yml) }}Controller.get{{ pascalCase (getSingularName yml) }})
+	routes.post('{{ getEndpointPrefix yml }}{{ camelCase (getPluralName yml) }}',
+		[{{ pascalCase (getPluralName yml) }}Validators.create{{ pascalCase (getSingularName yml) }}, authRequired],
+		{{ pascalCase (getPluralName yml) }}Controller.create{{ pascalCase (getSingularName yml) }})
+	routes.post('{{ getEndpointPrefix yml }}{{ camelCase (getPluralName yml) }}/:{{ getPKeyParameter yml }}',
+		[{{ pascalCase (getPluralName yml) }}Validators.update{{ pascalCase (getSingularName yml) }}, authRequired],
+		{{ pascalCase (getPluralName yml) }}Controller.update{{ pascalCase (getSingularName yml) }})
+	routes.delete('{{ getEndpointPrefix yml }}{{ camelCase (getPluralName yml) }}/:{{ getPKeyParameter yml }}',
+		[{{ pascalCase (getPluralName yml) }}Validators.delete{{ pascalCase (getSingularName yml) }}, authRequired],
+		{{ pascalCase (getPluralName yml) }}Controller.delete{{ pascalCase (getSingularName yml) }})
+
+
+$1

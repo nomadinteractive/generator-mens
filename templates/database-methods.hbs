@@ -1,0 +1,44 @@
+const get{{ pascalCase (getPluralName yml) }} = () => new Promise(async (resolve, reject) => {
+	models.{{ pascalCase (getPluralName yml) }}.findAll()
+		.then(({{ snakeCase (getPluralName yml) }}) => {
+			resolve({{ snakeCase (getPluralName yml) }})
+		})
+		.catch(err => reject(err))
+})
+
+const get{{ pascalCase (getSingularName yml) }} = (id) => new Promise(async (resolve, reject) => {
+	models.{{ pascalCase (getPluralName yml) }}.findByPk(id)
+		.then(({{ snakeCase (getSingularName yml) }}) => {
+			resolve({{ snakeCase (getSingularName yml) }})
+		})
+		.catch(err => reject(err))
+})
+
+const create{{ pascalCase (getSingularName yml) }} = values => new Promise(async (resolve, reject) => {
+	const objToInsert = Object.assign({}, values)
+
+	models.{{ pascalCase (getPluralName yml) }}.create(objToInsert)
+		.then((result) => {
+			resolve(result)
+		})
+		.catch((err) => {
+			reject(err)
+		})
+})
+
+const update{{ pascalCase (getSingularName yml) }} = (id, values) => new Promise(async (resolve, reject) => {
+	const objToUpdate = Object.assign({}, values)
+
+	models.{{ pascalCase (getPluralName yml) }}.findByPk(id)
+		.then(({{ snakeCase (getSingularName yml) }}) => {
+			{{ snakeCase (getSingularName yml) }}.update(objToUpdate)
+				.then((result) => {
+					resolve(result)
+				})
+				.catch((err) => {
+					reject(err)
+				})
+		})
+})
+
+$1

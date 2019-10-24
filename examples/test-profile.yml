@@ -1,0 +1,14 @@
+name:
+  singular: government document
+  plural: government documents
+endpointPrefix: /api/v1/
+fields:
+  id: int#
+  user_id: int*
+  name: string*
+  description: text
+  is_featured: bool
+  status: enum(draft, published, deleted)
+  stage: enum(1, 2, 3)
+  created_at: timestamp
+  updated_at: timestamp

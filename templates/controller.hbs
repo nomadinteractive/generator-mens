@@ -1,0 +1,242 @@
+import { validationResult } from 'express-validator/check'
+
+export default (container) => {
+	const { db } = container // eslint-disable-line
+
+	return {
+
+		/**
+		 * @swagger
+		 *
+		 * {{ getEndpointPrefix yml }}{{ camelCase (getPluralName yml) }}:
+		 *   get:
+		 *     summary: Get list of {{ lowerCase (getPluralName yml) }}
+		 *     tags:
+		 *       - {{ titleCase (getPluralName yml) }}
+		 *     responses:
+		 *       200:
+		 *         $ref: '#/components/responses/GenericSuccess'
+		 *       400:
+		 *         $ref: '#/components/responses/BadRequest'
+		 *       403:
+		 *         $ref: '#/components/responses/Unauthorized'
+		 */
+		get{{ pascalCase (getPluralName yml) }}: (req, res) => {
+			const errors = validationResult(req)
+			if (!errors.isEmpty()) {
+				return res.status(400).json({ code: -1400, errors: errors.mapped() })
+			}
+
+			db.get{{ pascalCase (getPluralName yml) }}().then(({{ snakeCase (getPluralName yml) }}) => {
+				res.json({
+					code: 0,
+					{{ snakeCase (getPluralName yml) }}
+				})
+			}).catch((err) => {
+				res.json({
+					code: -1000,
+					msg: err
+				})
+			})
+		},
+
+
+		/**
+		 * @swagger
+		 *
+		 * {{ getEndpointPrefix yml }}{{ camelCase (getPluralName yml) }}/:{{ getPKeyParameter yml }}:
+		 *   get:
+		 *     summary: Get single {{ lowerCase (getSingularName yml) }} by primary key
+		 *     tags:
+		 *       - {{ titleCase (getPluralName yml) }}
+		 *     parameters:
+		 *       - $ref: '#/components/parameters/{{ camelCase (getSingularName yml) }}IdInUrl'
+		 *     responses:
+		 *       200:
+		 *         $ref: '#/components/responses/GenericSuccess'
+		 *       400:
+		 *         $ref: '#/components/responses/BadRequest'
+		 *       403:
+		 *         $ref: '#/components/responses/Unauthorized'
+		 */
+		get{{ pascalCase (getSingularName yml) }}: (req, res) => {
+			const errors = validationResult(req)
+			if (!errors.isEmpty()) {
+				return res.status(400).json({ errors: errors.mapped() })
+			}
+
+			const { {{ getPKeyParameter yml }} } = req.params
+			if (!{{ getPKeyParameter yml }}) {
+				return res.status(400).json({ code: -1001 })
+			}
+
+			db.get{{ pascalCase (getSingularName yml) }}({{ getPKeyParameter yml }})
+				.then(({{ snakeCase (getSingularName yml) }}) => {
+					res.json({
+						code: 0,
+						{{ snakeCase (getSingularName yml) }}
+					})
+				})
+				.catch((err) => {
+					res.json({
+						code: -1000,
+						msg: err
+					})
+				})
+		},
+
+
+		/**
+		 * @swagger
+		 *
+		 * {{ getEndpointPrefix yml }}{{ camelCase (getPluralName yml) }}:
+		 *   post:
+		 *     summary: Create a new {{ lowerCase (getSingularName yml) }}
+		 *     tags:
+		 *       - {{ titleCase (getPluralName yml) }}
+		 *     responses:
+		 *       200:
+		 *         $ref: '#/components/responses/GenericSuccess'
+		 *       400:
+		 *         $ref: '#/components/responses/BadRequest'
+		 *       403:
+		 *         $ref: '#/components/responses/Unauthorized'
+		 */
+		create{{ pascalCase (getSingularName yml) }}: (req, res) => {
+			const errors = validationResult(req)
+			if (!errors.isEmpty()) {
+				return res.status(400).json({ code: -1400, errors: errors.mapped() })
+			}
+
+			new Promise((resolve, reject) => {
+				db.create{{ pascalCase (getSingularName yml) }}(req.body)
+					.then(() => {
+						resolve(true)
+					})
+					.catch(err => reject(err))
+			})
+				.then((creationComplete) => {
+					if (creationComplete) {
+						res.json({
+							code: 0,
+							message: 'New {{ titleCase (getSingularName yml) }} created successfully'
+						})
+					}
+					else {
+						res.json({
+							code: -1000,
+							message: 'Tech error'
+						})
+					}
+				})
+				.catch((error) => {
+					res.json({
+						code: -1000,
+						message: error
+					})
+				})
+		},
+
+
+		/**
+		 * @swagger
+		 *
+		 * {{ getEndpointPrefix yml }}{{ camelCase (getPluralName yml) }}/:{{ getPKeyParameter yml }}:
+		 *   post:
+		 *     summary: Update an existing {{ lowerCase (getSingularName yml) }}
+		 *     tags:
+		 *       - {{ titleCase (getPluralName yml) }}
+		 *     parameters:
+		 *       - $ref: '#/components/parameters/{{ camelCase (getSingularName yml) }}IdInUrl'
+		 *     responses:
+		 *       200:
+		 *         $ref: '#/components/responses/GenericSuccess'
+		 *       400:
+		 *         $ref: '#/components/responses/BadRequest'
+		 *       403:
+		 *         $ref: '#/components/responses/Unauthorized'
+		 */
+		update{{ pascalCase (getSingularName yml) }}: (req, res) => {
+			const errors = validationResult(req)
+			if (!errors.isEmpty()) {
+				return res.status(400).json({ code: -1400, errors: errors.mapped() })
+			}
+
+			const { {{ getPKeyParameter yml }} } = req.params
+			if (!{{ getPKeyParameter yml }}) {
+				return res.status(400).json({ code: -1001 })
+			}
+
+			new Promise((resolve, reject) => {
+				db.update{{ pascalCase (getSingularName yml) }}({
+					id: {{ getPKeyParameter yml }},
+					values: req.body
+				})
+					.then(() => {
+						resolve(true)
+					})
+					.catch(err => reject(err))
+			})
+				.then((creationComplete) => {
+					if (creationComplete) {
+						res.json({
+							code: 0,
+							message: '{{ titleCase (getSingularName yml) }} updated successfully'
+						})
+					}
+					else {
+						res.json({
+							code: -1000,
+							message: 'Error'
+						})
+					}
+				})
+				.catch((error) => {
+					res.json({
+						code: -1000,
+						message: error
+					})
+				})
+		},
+
+
+		/**
+		 * @swagger
+		 *
+		 * {{ getEndpointPrefix yml }}{{ camelCase (getPluralName yml) }}/:{{ getPKeyParameter yml }}:
+		 *   delete:
+		 *     summary: Deletes a {{ lowerCase (getSingularName yml) }}
+		 *     tags:
+		 *       - {{ titleCase (getPluralName yml) }}
+		 *     parameters:
+		 *       - $ref: '#/components/parameters/{{ camelCase (getSingularName yml) }}IdInUrl'
+		 *     responses:
+		 *       200:
+		 *         $ref: '#/components/responses/GenericSuccess'
+		 *       400:
+		 *         $ref: '#/components/responses/BadRequest'
+		 *       403:
+		 *         $ref: '#/components/responses/Unauthorized'
+		 */
+		delete{{ pascalCase (getSingularName yml) }}: (req, res) => {
+			const errors = validationResult(req)
+			if (!errors.isEmpty()) {
+				return res.status(400).json({ code: -1400, errors: errors.mapped() })
+			}
+
+			const { {{ getPKeyParameter yml }} } = req.params
+			if (!{{ getPKeyParameter yml }}) {
+				return res.status(400).json({ code: -1001 })
+			}
+
+			db.delete{{ pascalCase (getSingularName yml) }}({{ getPKeyParameter yml }})
+				.then(() => {
+					res.json({
+						code: 0
+					})
+				})
+		}
+
+
+	}
+}

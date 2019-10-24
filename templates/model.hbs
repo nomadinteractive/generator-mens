@@ -1,0 +1,43 @@
+module.exports = (sequelize, DataTypes, globalModelConfig) => {
+	const Model = sequelize.define('{{ pascalCase (getPluralName yml) }}', {
+		{{#each (getFields yml)}}
+		{{ @key }}: {
+			type: {{ getSequalizeType type }},
+			{{#if (not (isFalsey autoIncrement))}}
+			autoIncrement: true,
+			{{/if}}
+			{{#if (not (isFalsey primaryKey))}}
+			primaryKey: true,
+			{{/if}}
+			{{#if (not (isFalsey foreignKey))}}
+			foreignKey: true,
+			{{/if}}
+			{{#if (not (eq (typeOf references) 'undefined'))}}
+			references: {
+				{{#each references}}
+				{{ @key }}: '{{ this }}',
+				{{/each}}
+			},
+			{{/if}}
+			{{#if (not (eq (typeOf values) 'undefined'))}}
+			values: ['{{{ join values "', '" }}}'],
+			{{/if}}
+			{{#if (not (eq (typeOf allowNull) 'undefined'))}}
+			allowNull: {{ allowNull }},
+			{{else}}
+			allowNull: true, {{!-- default value --}}
+			{{/if}}
+			{{#if (not (isFalsey defaultValue))}}
+			defaultValue: '{{ defaultValue }}',
+			{{/if}}
+		},
+		{{/each}}
+	}, globalModelConfig)
+
+	Model.associate = (models) => {
+		// TODO: Define model relationships
+		// Model.belongsTo(models.Users, { foreignKey: 'user_id', as: 'User' })
+	}
+
+	return Model
+}
