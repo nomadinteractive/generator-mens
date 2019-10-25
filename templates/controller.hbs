@@ -72,7 +72,7 @@ export default (container) => {
 			}
 
 			db.get{{ pascalCase (getSingularName yml) }}({{ getPKeyParameter yml }})
-				.then(({{ snakeCase (getSingularName yml) }}) => {  // eslint-disable-line camelcase
+				.then(({{ snakeCase (getSingularName yml) }}) => { // eslint-disable-line camelcase
 					res.json({
 						code: 0,
 						{{ snakeCase (getSingularName yml) }}

@@ -41,7 +41,7 @@ const update{{ pascalCase (getSingularName yml) }} = (id, values) => new Promise
 		})
 })
 
-onst delete{{ pascalCase (getSingularName yml) }} = id => new Promise(async (resolve, reject) => {
+const delete{{ pascalCase (getSingularName yml) }} = id => new Promise(async (resolve, reject) => {
 	models.{{ pascalCase (getPluralName yml) }}.findByPk(id)
 		.then(({{ snakeCase (getSingularName yml) }}) => { // eslint-disable-line camelcase
 			{{ snakeCase (getSingularName yml) }}.delete()
