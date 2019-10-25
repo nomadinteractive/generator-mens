@@ -45,13 +45,13 @@ export default (container) => {
 		/**
 		 * @swagger
 		 *
-		 * {{ getEndpointPrefix yml }}{{ camelCase (getPluralName yml) }}/:{{ getPKeyParameter yml }}:
+		 * {{ getEndpointPrefix yml }}{{ camelCase (getPluralName yml) }}/:{{ getPKey yml }}:
 		 *   get:
 		 *     summary: Get single {{ lowerCase (getSingularName yml) }} by primary key
 		 *     tags:
 		 *       - {{ titleCase (getPluralName yml) }}
 		 *     parameters:
-		 *       - $ref: '#/components/parameters/{{ camelCase (getSingularName yml) }}IdInUrl'
+		 *       - $ref: '#/components/parameters/{{ camelCase (getSingularName yml) }}PKeyInUrl'
 		 *     responses:
 		 *       200:
 		 *         $ref: '#/components/responses/GenericSuccess'
@@ -66,12 +66,12 @@ export default (container) => {
 				return res.status(400).json({ errors: errors.mapped() })
 			}
 
-			const { {{ getPKeyParameter yml }} } = req.params
-			if (!{{ getPKeyParameter yml }}) {
+			const { {{ getPKey yml }} } = req.params
+			if (!{{ getPKey yml }}) {
 				return res.status(400).json({ code: -1001 })
 			}
 
-			db.get{{ pascalCase (getSingularName yml) }}({{ getPKeyParameter yml }})
+			db.get{{ pascalCase (getSingularName yml) }}({{ getPKey yml }})
 				.then(({{ snakeCase (getSingularName yml) }}) => { // eslint-disable-line camelcase
 					res.json({
 						code: 0,
@@ -142,13 +142,13 @@ export default (container) => {
 		/**
 		 * @swagger
 		 *
-		 * {{ getEndpointPrefix yml }}{{ camelCase (getPluralName yml) }}/:{{ getPKeyParameter yml }}:
+		 * {{ getEndpointPrefix yml }}{{ camelCase (getPluralName yml) }}/:{{ getPKey yml }}:
 		 *   post:
 		 *     summary: Update an existing {{ lowerCase (getSingularName yml) }}
 		 *     tags:
 		 *       - {{ titleCase (getPluralName yml) }}
 		 *     parameters:
-		 *       - $ref: '#/components/parameters/{{ camelCase (getSingularName yml) }}IdInUrl'
+		 *       - $ref: '#/components/parameters/{{ camelCase (getSingularName yml) }}PKeyInUrl'
 		 *     responses:
 		 *       200:
 		 *         $ref: '#/components/responses/GenericSuccess'
@@ -163,14 +163,14 @@ export default (container) => {
 				return res.status(400).json({ code: -1400, errors: errors.mapped() })
 			}
 
-			const { {{ getPKeyParameter yml }} } = req.params
-			if (!{{ getPKeyParameter yml }}) {
+			const { {{ getPKey yml }} } = req.params
+			if (!{{ getPKey yml }}) {
 				return res.status(400).json({ code: -1001 })
 			}
 
 			new Promise((resolve, reject) => {
 				db.update{{ pascalCase (getSingularName yml) }}({
-					id: {{ getPKeyParameter yml }},
+					{{ getPKey yml }},
 					values: req.body
 				})
 					.then(() => {
@@ -204,13 +204,13 @@ export default (container) => {
 		/**
 		 * @swagger
 		 *
-		 * {{ getEndpointPrefix yml }}{{ camelCase (getPluralName yml) }}/:{{ getPKeyParameter yml }}:
+		 * {{ getEndpointPrefix yml }}{{ camelCase (getPluralName yml) }}/:{{ getPKey yml }}:
 		 *   delete:
 		 *     summary: Deletes a {{ lowerCase (getSingularName yml) }}
 		 *     tags:
 		 *       - {{ titleCase (getPluralName yml) }}
 		 *     parameters:
-		 *       - $ref: '#/components/parameters/{{ camelCase (getSingularName yml) }}IdInUrl'
+		 *       - $ref: '#/components/parameters/{{ camelCase (getSingularName yml) }}PKeyInUrl'
 		 *     responses:
 		 *       200:
 		 *         $ref: '#/components/responses/GenericSuccess'
@@ -225,12 +225,12 @@ export default (container) => {
 				return res.status(400).json({ code: -1400, errors: errors.mapped() })
 			}
 
-			const { {{ getPKeyParameter yml }} } = req.params
-			if (!{{ getPKeyParameter yml }}) {
+			const { {{ getPKey yml }} } = req.params
+			if (!{{ getPKey yml }}) {
 				return res.status(400).json({ code: -1001 })
 			}
 
-			db.delete{{ pascalCase (getSingularName yml) }}({{ getPKeyParameter yml }})
+			db.delete{{ pascalCase (getSingularName yml) }}({{ getPKey yml }})
 				.then(() => {
 					res.json({
 						code: 0

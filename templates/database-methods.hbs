@@ -6,8 +6,8 @@ const get{{ pascalCase (getPluralName yml) }} = () => new Promise(async (resolve
 		.catch(err => reject(err))
 })
 
-const get{{ pascalCase (getSingularName yml) }} = id => new Promise(async (resolve, reject) => {
-	models.{{ pascalCase (getPluralName yml) }}.findByPk(id)
+const get{{ pascalCase (getSingularName yml) }} = {{ getPKey yml }} => new Promise(async (resolve, reject) => {
+	models.{{ pascalCase (getPluralName yml) }}.findByPk({{ getPKey yml }})
 		.then(({{ snakeCase (getSingularName yml) }}) => { // eslint-disable-line camelcase
 			resolve({{ snakeCase (getSingularName yml) }})
 		})
@@ -26,10 +26,10 @@ const create{{ pascalCase (getSingularName yml) }} = values => new Promise(async
 		})
 })
 
-const update{{ pascalCase (getSingularName yml) }} = (id, values) => new Promise(async (resolve, reject) => {
+const update{{ pascalCase (getSingularName yml) }} = ({{ getPKey yml }}, values) => new Promise(async (resolve, reject) => {
 	const objToUpdate = Object.assign({}, values)
 
-	models.{{ pascalCase (getPluralName yml) }}.findByPk(id)
+	models.{{ pascalCase (getPluralName yml) }}.findByPk({{ getPKey yml }})
 		.then(({{ snakeCase (getSingularName yml) }}) => { // eslint-disable-line camelcase
 			{{ snakeCase (getSingularName yml) }}.update(objToUpdate)
 				.then((result) => {
@@ -41,10 +41,10 @@ const update{{ pascalCase (getSingularName yml) }} = (id, values) => new Promise
 		})
 })
 
-const delete{{ pascalCase (getSingularName yml) }} = id => new Promise(async (resolve, reject) => {
-	models.{{ pascalCase (getPluralName yml) }}.findByPk(id)
+const delete{{ pascalCase (getSingularName yml) }} = {{ getPKey yml }} => new Promise(async (resolve, reject) => {
+	models.{{ pascalCase (getPluralName yml) }}.findByPk({{ getPKey yml }})
 		.then(({{ snakeCase (getSingularName yml) }}) => { // eslint-disable-line camelcase
-			{{ snakeCase (getSingularName yml) }}.delete()
+			{{ snakeCase (getSingularName yml) }}.destroy()
 				.then((result) => {
 					resolve(result)
 				})
