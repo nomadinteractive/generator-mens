@@ -103,6 +103,7 @@ const getFields = (ymlFile) => {
 			if (val.indexOf('#') !== -1) { // pkey
 				newFieldScheme.primaryKey = true
 				newFieldScheme.required = true
+				newFieldScheme.autoIncrement = true
 				val = val.replace(/\#/g, '')
 			}
 			newFieldScheme.type = val
