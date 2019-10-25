@@ -233,6 +233,12 @@ export default (container) => {
 						code: 0
 					})
 				})
+				.catch((error) => {
+					res.json({
+						code: -1000,
+						message: error
+					})
+				})
 		}
 
 
