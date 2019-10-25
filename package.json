@@ -9,7 +9,7 @@
   "clean": "npm run check"
  },
  "bin": {
-	"nomad-generator-mens": "./bin.js"
+  "nomad-generator-mens": "./bin.js"
  },
  "author": "",
  "license": "ISC",
