@@ -70,20 +70,6 @@ const getPKey = (ymlFile) => {
 	return pKeyFieldName
 }
 
-const getPKeyParameter = (ymlFile) => {
-	const pKey = getPKey(ymlFile)
-	const name = getSingularName(ymlFile)
-	const nameWords = name.split(' ')
-
-	if (nameWords.length > 1) {
-		// government document + id => gdId
-		return nameWords.map(w => w.substr(0, 1)).join('') + helpers.pascalcase(pKey)
-	}
-
-	// document + id => documentId	
-	return name.toLowercase() + helpers.pascalcase(pKey)
-}
-
 const getFields = (ymlFile) => {
 	const fields = getYmlField(ymlFile, 'fields')
 	const fieldsKeys = Object.keys(fields)
@@ -102,8 +88,9 @@ const getFields = (ymlFile) => {
 			}
 			if (val.indexOf('#') !== -1) { // pkey
 				newFieldScheme.primaryKey = true
-				newFieldScheme.required = true
 				newFieldScheme.autoIncrement = true
+				newFieldScheme.allowNull = false
+				newFieldScheme.required = true
 				val = val.replace(/\#/g, '')
 			}
 			newFieldScheme.type = val
@@ -200,7 +187,6 @@ module.exports = (plop) => {
 	plop.addHelper('getSingularName', getSingularName)
 	plop.addHelper('getEndpointPrefix', getEndpointPrefix)
 	plop.addHelper('getPKey', getPKey)
-	plop.addHelper('getPKeyParameter', getPKeyParameter)
 	plop.addHelper('getFields', getFields)
 	plop.addHelper('getRequiredFields', getRequiredFields)
 	plop.addHelper('getRequiredFieldsExceptPkey', getRequiredFieldsExceptPkey)
