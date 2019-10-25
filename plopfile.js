@@ -314,7 +314,7 @@ module.exports = (plop) => {
 				type: 'modify',
 				path: routesFilePath,
 				pattern: getPatternRegex(routesFileValidatorImportsPrependPattern),
-				template: 'import {{ pascalCase (getPluralName yml) }}ValidatorsInit from \'./' + config.mens.controllers_directory + '/{{ snakeCase (getPluralName yml) }}\'\n$1'
+				template: 'import {{ pascalCase (getPluralName yml) }}ValidatorsInit from \'./' + config.mens.validators_directory + '/{{ snakeCase (getPluralName yml) }}\'\n$1'
 			},
 			// routes - import init controller
 			{
