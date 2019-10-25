@@ -31,6 +31,7 @@ const update{{ pascalCase (getSingularName yml) }} = ({{ getPKey yml }}, values)
 
 	models.{{ pascalCase (getPluralName yml) }}.findByPk({{ getPKey yml }})
 		.then(({{ snakeCase (getSingularName yml) }}) => { // eslint-disable-line camelcase
+		if (!{{ snakeCase (getSingularName yml) }}) return reject(new Error('{{titleCase (getSingularName yml)}} Not found')) // eslint-disable-line camelcase
 			{{ snakeCase (getSingularName yml) }}.update(objToUpdate)
 				.then((result) => {
 					resolve(result)
@@ -44,6 +45,7 @@ const update{{ pascalCase (getSingularName yml) }} = ({{ getPKey yml }}, values)
 const delete{{ pascalCase (getSingularName yml) }} = {{ getPKey yml }} => new Promise(async (resolve, reject) => {
 	models.{{ pascalCase (getPluralName yml) }}.findByPk({{ getPKey yml }})
 		.then(({{ snakeCase (getSingularName yml) }}) => { // eslint-disable-line camelcase
+			if (!{{ snakeCase (getSingularName yml) }}) return reject(new Error('{{titleCase (getSingularName yml)}} Not found')) // eslint-disable-line camelcase
 			{{ snakeCase (getSingularName yml) }}.destroy()
 				.then((result) => {
 					resolve(result)
