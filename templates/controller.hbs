@@ -27,7 +27,8 @@ export default (container) => {
 				return res.status(400).json({ code: -1400, errors: errors.mapped() })
 			}
 
-			db.get{{ pascalCase (getPluralName yml) }}().then(({{ snakeCase (getPluralName yml) }}) => {
+			// eslint-disable-next-line camelcase
+			db.get{{ pascalCase (getPluralName yml) }}().then(({{ snakCase (getPluralName yml) }}) => {
 				res.json({
 					code: 0,
 					{{ snakeCase (getPluralName yml) }}
@@ -71,7 +72,7 @@ export default (container) => {
 			}
 
 			db.get{{ pascalCase (getSingularName yml) }}({{ getPKeyParameter yml }})
-				.then(({{ snakeCase (getSingularName yml) }}) => {
+				.then(({{ snakeCase (getSingularName yml) }}) => {  // eslint-disable-line camelcase
 					res.json({
 						code: 0,
 						{{ snakeCase (getSingularName yml) }}

@@ -1,14 +1,14 @@
 const get{{ pascalCase (getPluralName yml) }} = () => new Promise(async (resolve, reject) => {
 	models.{{ pascalCase (getPluralName yml) }}.findAll()
-		.then(({{ snakeCase (getPluralName yml) }}) => {
+		.then(({{ snakeCase (getPluralName yml) }}) => { // eslint-disable-line camelcase
 			resolve({{ snakeCase (getPluralName yml) }})
 		})
 		.catch(err => reject(err))
 })
 
-const get{{ pascalCase (getSingularName yml) }} = (id) => new Promise(async (resolve, reject) => {
+const get{{ pascalCase (getSingularName yml) }} = id => new Promise(async (resolve, reject) => {
 	models.{{ pascalCase (getPluralName yml) }}.findByPk(id)
-		.then(({{ snakeCase (getSingularName yml) }}) => {
+		.then(({{ snakeCase (getSingularName yml) }}) => { // eslint-disable-line camelcase
 			resolve({{ snakeCase (getSingularName yml) }})
 		})
 		.catch(err => reject(err))
@@ -30,8 +30,21 @@ const update{{ pascalCase (getSingularName yml) }} = (id, values) => new Promise
 	const objToUpdate = Object.assign({}, values)
 
 	models.{{ pascalCase (getPluralName yml) }}.findByPk(id)
-		.then(({{ snakeCase (getSingularName yml) }}) => {
+		.then(({{ snakeCase (getSingularName yml) }}) => { // eslint-disable-line camelcase
 			{{ snakeCase (getSingularName yml) }}.update(objToUpdate)
+				.then((result) => {
+					resolve(result)
+				})
+				.catch((err) => {
+					reject(err)
+				})
+		})
+})
+
+onst delete{{ pascalCase (getSingularName yml) }} = id => new Promise(async (resolve, reject) => {
+	models.{{ pascalCase (getPluralName yml) }}.findByPk(id)
+		.then(({{ snakeCase (getSingularName yml) }}) => { // eslint-disable-line camelcase
+			{{ snakeCase (getSingularName yml) }}.delete()
 				.then((result) => {
 					resolve(result)
 				})

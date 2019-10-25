@@ -21,7 +21,8 @@ const validateConfig = (config) => {
 	if (typeof config.mens.validators_directory !== 'string') return false
 	if (typeof config.mens.database_file !== 'string') return false
 	if (typeof config.mens.docs_tags_file !== 'string') return false
-	if (typeof config.mens.docs_tags_file_prepend_pattern !== 'string') return false
+	if (typeof config.mens.database_file_new_methods_prepend_pattern !== 'string') return false
+	if (typeof config.mens.database_file_exports_prepend_pattern !== 'string') return false
 	if (typeof config.mens.docs_parameters_file !== 'string') return false
 	if (typeof config.mens.docs_parameters_file_prepend_pattern !== 'string') return false
 	if (typeof config.mens.routes_file !== 'string') return false
@@ -215,7 +216,9 @@ module.exports = (plop) => {
 	const controllersDirectoryPath = path.resolve(config.mens.controllers_directory)
 	const validatorsDirectoryPath = path.resolve(config.mens.validators_directory)
 	const databaseFilePath = path.resolve(config.mens.database_file)
-	const databaseFilePrependPattern = config.mens.database_file_prepend_pattern
+	const databaseFileNewMethodsPrependPattern = config.mens.database_file_new_methods_prepend_pattern
+	const databaseFileExportsPrependPattern = config.mens.database_file_exports_prepend_pattern
+
 	const docsTagsFilePath = path.resolve(config.mens.docs_tags_file)
 	const docsTagsFilePrependPattern = config.mens.docs_tags_file_prepend_pattern
 	const docsParametersFilePath = path.resolve(config.mens.docs_parameters_file)
@@ -273,8 +276,15 @@ module.exports = (plop) => {
 			{
 				type: 'modify',
 				path: databaseFilePath,
-				pattern: getPatternRegex(databaseFilePrependPattern),
+				pattern: getPatternRegex(databaseFileNewMethodsPrependPattern),
 				templateFile: 'templates/database-methods.hbs'
+			},
+			// database.js exports
+			{
+				type: 'modify',
+				path: databaseFilePath,
+				pattern: getPatternRegex(databaseFileExportsPrependPattern),
+				templateFile: 'templates/database-methods-exports.hbs'
 			},
 
 			// add new schema in docs/parameters file
