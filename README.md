@@ -44,16 +44,70 @@ Few additional markers in simple "type" annotation to be extended with:
 - ```defaultValue```: ...
 
 
+## Set up configuration file in your project:
 
-## Install Run
+Add following json configuration to your project root with .nomad-generators-config file:
+
+```json
+{
+    "sequalize": {
+        "models_path": "models"
+    },
+	"mens": {
+		"controllers_directory": "controllers",
+		"validators_directory": "validators",
+		"database_file": "database.js",
+		"database_file_prepend_pattern": "// $Generator: New Database Methods Here",
+		"docs_tags_file": "docs/tags.js",
+		"docs_tags_file_prepend_pattern": " *   # $Generator: New Tags Here",
+		"docs_parameters_file": "docs/parameters.js",
+		"docs_parameters_file_prepend_pattern": " *     # $Generator: New Parameters Here",
+		"routes_file": "routes.js",
+		"routes_prepend_patterns": {
+			"controllers_imports": "// $Generator: New Controllers Imports Here",
+			"validator_imports": "// $Generator: New Validator Imports Here",
+			"controllers_init": "\t// $Generator: New Controllers Init Here",
+			"validator_init": "\t// $Generator: New Validator Init Here",
+			"endpoints"	: "\t// $Generator: New Endpoints Here"
+		}
+	}
+}
+```
+
+
+## Install (as clonned code)
 
 - ```npm install```
 - ```npm run generate-crud <yml-file-path>```
 
-
-## Integrate with a new MENS api boilerplate
+Integrate with a MENS api boilerplate manually
 
 Review all plopfile.js "modify" type actions and the pattern that are noted in the target files. These files are existing MENS structural files (database helper methods, router files, documentation...). Add the matching patterns to your own MESN boilerplate files (see output-example for a minimal skimmed version of MENS app files).
+
+
+## Install (as package in parent/project)
+
+Add the dependency and script to your package.json
+
+devDependencies (or dependencies):
+```"nomad-generator-mens": "git+ssh://git@ship.nomadinteractive.co:nomad-interactive/generator-mens.git"```
+
+scripts:
+```"generate-crud": "nomad-generator-crud"```
+
+Then, run
+```npm install```
+to install packages and register executable scripts
+
+
+### Usage
+
+To create a new model with yml schema:
+```npm run generate-crud```
+
+You can also send the yml parameter in this command as argument like:
+
+```npm run generate-crud scheme.yml```
 
 
 ## TODOS (Future Capabilities)

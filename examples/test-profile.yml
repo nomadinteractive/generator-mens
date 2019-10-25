@@ -1,6 +1,6 @@
 name:
-  singular: government document
-  plural: government documents
+  singular: cheerful books
+  plural: cheerful books
 endpointPrefix: /api/v1/
 fields:
   id: int#
