@@ -3,6 +3,38 @@ const fs = require('fs')
 const YAML = require('yaml')
 const helpers = require('handlebars-helpers')()
 
+const projectDir = process.cwd()
+const projectDirGeneratorConfigFilePath = path.join(projectDir, '.nomad-generators-config')
+const nodeModuleDir = __dirname
+
+const getGeneratorsConfig = (configFilePath) => {
+	const configFileStr = fs.readFileSync(path.resolve(configFilePath), 'utf8')
+	const config = JSON.parse(configFileStr)
+	return config
+}
+
+const validateConfig = (config) => {
+	if (typeof config.sequalize !== 'object') return false
+	if (typeof config.sequalize.models_path !== 'string') return false
+	if (typeof config.mens !== 'object') return false
+	if (typeof config.mens.controllers_directory !== 'string') return false
+	if (typeof config.mens.validators_directory !== 'string') return false
+	if (typeof config.mens.database_file !== 'string') return false
+	if (typeof config.mens.docs_tags_file !== 'string') return false
+	if (typeof config.mens.database_file_new_methods_prepend_pattern !== 'string') return false
+	if (typeof config.mens.database_file_exports_prepend_pattern !== 'string') return false
+	if (typeof config.mens.docs_parameters_file !== 'string') return false
+	if (typeof config.mens.docs_parameters_file_prepend_pattern !== 'string') return false
+	if (typeof config.mens.routes_file !== 'string') return false
+	if (typeof config.mens.routes_prepend_patterns !== 'object') return false
+	if (typeof config.mens.routes_prepend_patterns.controllers_imports !== 'string') return false
+	if (typeof config.mens.routes_prepend_patterns.validator_imports !== 'string') return false
+	if (typeof config.mens.routes_prepend_patterns.controllers_init !== 'string') return false
+	if (typeof config.mens.routes_prepend_patterns.validator_init !== 'string') return false
+	if (typeof config.mens.routes_prepend_patterns.endpoints !== 'string') return false
+	return true
+}
+
 const getYmlField = (ymlFile, fieldName) => {
 	const yamlFileStr = fs.readFileSync(path.resolve(ymlFile), 'utf8')
 	const parsedYml = YAML.parse(yamlFileStr)
@@ -38,20 +70,6 @@ const getPKey = (ymlFile) => {
 	return pKeyFieldName
 }
 
-const getPKeyParameter = (ymlFile) => {
-	const pKey = getPKey(ymlFile)
-	const name = getSingularName(ymlFile)
-	const nameWords = name.split(' ')
-
-	if (nameWords.length > 1) {
-		// government document + id => gdId
-		return nameWords.map(w => w.substr(0, 1)).join('') + helpers.pascalcase(pKey)
-	}
-
-	// document + id => documentId	
-	return name.toLowercase() + helpers.pascalcase(pKey)
-}
-
 const getFields = (ymlFile) => {
 	const fields = getYmlField(ymlFile, 'fields')
 	const fieldsKeys = Object.keys(fields)
@@ -70,6 +88,8 @@ const getFields = (ymlFile) => {
 			}
 			if (val.indexOf('#') !== -1) { // pkey
 				newFieldScheme.primaryKey = true
+				newFieldScheme.autoIncrement = true
+				newFieldScheme.allowNull = false
 				newFieldScheme.required = true
 				val = val.replace(/\#/g, '')
 			}
@@ -144,6 +164,16 @@ const getSequalizeType = (type) => {
 	}
 }
 
+const getPatternRegex = (str) => {
+	return new RegExp('(' + str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')')
+}
+
+const config = getGeneratorsConfig(projectDirGeneratorConfigFilePath)
+if (!validateConfig(config)) {
+	console.log("Generator configuration file (.nomad-generators-config) is not defined or not valid!")
+	process.exit(-1)
+}
+
 module.exports = (plop) => {
 	// Extended Handlebar Helpers
 	plop.addHelper('eq', helpers.eq)
@@ -157,7 +187,6 @@ module.exports = (plop) => {
 	plop.addHelper('getSingularName', getSingularName)
 	plop.addHelper('getEndpointPrefix', getEndpointPrefix)
 	plop.addHelper('getPKey', getPKey)
-	plop.addHelper('getPKeyParameter', getPKeyParameter)
 	plop.addHelper('getFields', getFields)
 	plop.addHelper('getRequiredFields', getRequiredFields)
 	plop.addHelper('getRequiredFieldsExceptPkey', getRequiredFieldsExceptPkey)
@@ -168,7 +197,28 @@ module.exports = (plop) => {
 		const renderedTempalte = plop.renderString(tpl, answers)
 		console.log('====> RenderedTempalte\n\n', renderedTempalte)
 	}
-	
+
+	// config variables to be used in the generator configuration object below
+	const modelsDirectoryPath = path.resolve(config.sequalize.models_path)
+	const controllersDirectoryPath = path.resolve(config.mens.controllers_directory)
+	const validatorsDirectoryPath = path.resolve(config.mens.validators_directory)
+	const databaseFilePath = path.resolve(config.mens.database_file)
+	const databaseFileNewMethodsPrependPattern = config.mens.database_file_new_methods_prepend_pattern
+	const databaseFileExportsPrependPattern = config.mens.database_file_exports_prepend_pattern
+
+	const docsTagsFilePath = path.resolve(config.mens.docs_tags_file)
+	const docsTagsFilePrependPattern = config.mens.docs_tags_file_prepend_pattern
+	const docsParametersFilePath = path.resolve(config.mens.docs_parameters_file)
+	const docsParametersFilePrependPattern = config.mens.docs_parameters_file_prepend_pattern
+	const routesFilePath = path.resolve(config.mens.routes_file)
+	const routesFileControllersImportsPrependPattern = config.mens.routes_prepend_patterns.controllers_imports
+	const routesFileValidatorImportsPrependPattern = config.mens.routes_prepend_patterns.validator_imports
+	const routesFileControllersInitPrependPattern = config.mens.routes_prepend_patterns.controllers_init
+	const routesFileValidatorInitPrependPattern = config.mens.routes_prepend_patterns.validator_init
+	const routesFileEndpointsPrependPattern = config.mens.routes_prepend_patterns.endpoints
+
+
+	// Plop generator configuration
     plop.setGenerator('crud', {
 		description: 'Create MENS API CRUD',
         prompts: [
@@ -188,7 +238,7 @@ module.exports = (plop) => {
 			// create api controller
 			{
 				type: 'add',
-				path: './output/controllers/{{ snakeCase (getPluralName yml) }}.js',
+				path: controllersDirectoryPath + '/{{ snakeCase (getPluralName yml) }}.js',
 				templateFile: 'templates/controller.hbs',
 				force: true,
 			},
@@ -196,7 +246,7 @@ module.exports = (plop) => {
 			// create validator
 			{
 				type: 'add',
-				path: './output/validators/{{ snakeCase (getPluralName yml) }}.js',
+				path: validatorsDirectoryPath + '/{{ snakeCase (getPluralName yml) }}.js',
 				templateFile: 'templates/validator.hbs',
 				force: true,
 			},
@@ -204,7 +254,7 @@ module.exports = (plop) => {
 			// create new database model
 			{
 				type: 'add',
-				path: './output/models/{{ snakeCase (getPluralName yml) }}.js',
+				path: modelsDirectoryPath + '/{{ snakeCase (getPluralName yml) }}.js',
 				templateFile: 'templates/model.hbs',
 				force: true,
 			},
@@ -212,59 +262,66 @@ module.exports = (plop) => {
 			// add new database methods to database.js file
 			{
 				type: 'modify',
-				path: './output/database.js',
-				pattern: /(\/\/ \$Generator: New Database Methods Here)/,
+				path: databaseFilePath,
+				pattern: getPatternRegex(databaseFileNewMethodsPrependPattern),
 				templateFile: 'templates/database-methods.hbs'
+			},
+			// database.js exports
+			{
+				type: 'modify',
+				path: databaseFilePath,
+				pattern: getPatternRegex(databaseFileExportsPrependPattern),
+				templateFile: 'templates/database-methods-exports.hbs'
 			},
 
 			// add new schema in docs/parameters file
 			{
 				type: 'modify',
-				path: './output/docs/parameters.js',
-				pattern: /( \*     # \$Generator: New Parameters Here)/,
+				path: docsParametersFilePath,
+				pattern: getPatternRegex(docsParametersFilePrependPattern),
 				templateFile: 'templates/doc-parameters.hbs'
 			},
 			// add new schema in docs/tags file
 			{
 				type: 'modify',
-				path: './output/docs/tags.js',
-				pattern: /( \*   # \$Generator: New Tags Here)/,
+				path: docsTagsFilePath,
+				pattern: getPatternRegex(docsTagsFilePrependPattern),
 				template: ' *   - name: {{ titleCase (getPluralName yml) }}\n$1'
 			},
 
 			// routes - import controller
 			{
 				type: 'modify',
-				path: './output/routes.js',
-				pattern: /(\/\/ \$Generator: New Controllers Imports Here)/,
-				template: 'import {{ pascalCase (getPluralName yml) }}ControllerInit from \'./controllers/{{ snakeCase (getPluralName yml) }}\'\n$1'
+				path: routesFilePath,
+				pattern: getPatternRegex(routesFileControllersImportsPrependPattern),
+				template: 'import {{ pascalCase (getPluralName yml) }}ControllerInit from \'./' + config.mens.controllers_directory + '/{{ snakeCase (getPluralName yml) }}\'\n$1'
 			},
 			// routes - import validator
 			{
 				type: 'modify',
-				path: './output/routes.js',
-				pattern: /(\/\/ \$Generator: New Validator Imports Here)/,
-				template: 'import {{ pascalCase (getPluralName yml) }}ValidatorsInit from \'./validators/{{ snakeCase (getPluralName yml) }}\'\n$1'
+				path: routesFilePath,
+				pattern: getPatternRegex(routesFileValidatorImportsPrependPattern),
+				template: 'import {{ pascalCase (getPluralName yml) }}ValidatorsInit from \'./' + config.mens.validators_directory + '/{{ snakeCase (getPluralName yml) }}\'\n$1'
 			},
 			// routes - import init controller
 			{
 				type: 'modify',
-				path: './output/routes.js',
-				pattern: /(\t\/\/ \$Generator: New Controllers Init Here)/,
+				path: routesFilePath,
+				pattern: getPatternRegex(routesFileControllersInitPrependPattern),
 				template: '\tconst {{ pascalCase (getPluralName yml) }}Controller = {{ pascalCase (getPluralName yml) }}ControllerInit(container)\n$1'
 			},
 			// routes - import init validator
 			{
 				type: 'modify',
-				path: './output/routes.js',
-				pattern: /(\t\/\/ \$Generator: New Validators Init Here)/,
+				path: routesFilePath,
+				pattern: getPatternRegex(routesFileValidatorInitPrependPattern),
 				template: '\tconst {{ pascalCase (getPluralName yml) }}Validators = {{ pascalCase (getPluralName yml) }}ValidatorsInit(container)\n$1'
 			},
 			// routes - add endpoints
 			{
 				type: 'modify',
-				path: './output/routes.js',
-				pattern: /(\t\/\/ \$Generator: New Endpoints Here)/,
+				path: routesFilePath,
+				pattern: getPatternRegex(routesFileEndpointsPrependPattern),
 				templateFile: 'templates/router-endpoints.hbs'
 			},
 

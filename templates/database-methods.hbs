@@ -1,14 +1,14 @@
 const get{{ pascalCase (getPluralName yml) }} = () => new Promise(async (resolve, reject) => {
 	models.{{ pascalCase (getPluralName yml) }}.findAll()
-		.then(({{ snakeCase (getPluralName yml) }}) => {
+		.then(({{ snakeCase (getPluralName yml) }}) => { // eslint-disable-line camelcase
 			resolve({{ snakeCase (getPluralName yml) }})
 		})
 		.catch(err => reject(err))
 })
 
-const get{{ pascalCase (getSingularName yml) }} = (id) => new Promise(async (resolve, reject) => {
-	models.{{ pascalCase (getPluralName yml) }}.findByPk(id)
-		.then(({{ snakeCase (getSingularName yml) }}) => {
+const get{{ pascalCase (getSingularName yml) }} = {{ getPKey yml }} => new Promise(async (resolve, reject) => {
+	models.{{ pascalCase (getPluralName yml) }}.findByPk({{ getPKey yml }})
+		.then(({{ snakeCase (getSingularName yml) }}) => { // eslint-disable-line camelcase
 			resolve({{ snakeCase (getSingularName yml) }})
 		})
 		.catch(err => reject(err))
@@ -26,12 +26,27 @@ const create{{ pascalCase (getSingularName yml) }} = values => new Promise(async
 		})
 })
 
-const update{{ pascalCase (getSingularName yml) }} = (id, values) => new Promise(async (resolve, reject) => {
+const update{{ pascalCase (getSingularName yml) }} = ({{ getPKey yml }}, values) => new Promise(async (resolve, reject) => {
 	const objToUpdate = Object.assign({}, values)
 
-	models.{{ pascalCase (getPluralName yml) }}.findByPk(id)
-		.then(({{ snakeCase (getSingularName yml) }}) => {
+	models.{{ pascalCase (getPluralName yml) }}.findByPk({{ getPKey yml }})
+		.then(({{ snakeCase (getSingularName yml) }}) => { // eslint-disable-line camelcase
+		if (!{{ snakeCase (getSingularName yml) }}) return reject(new Error('{{titleCase (getSingularName yml)}} Not found')) // eslint-disable-line camelcase
 			{{ snakeCase (getSingularName yml) }}.update(objToUpdate)
+				.then((result) => {
+					resolve(result)
+				})
+				.catch((err) => {
+					reject(err)
+				})
+		})
+})
+
+const delete{{ pascalCase (getSingularName yml) }} = {{ getPKey yml }} => new Promise(async (resolve, reject) => {
+	models.{{ pascalCase (getPluralName yml) }}.findByPk({{ getPKey yml }})
+		.then(({{ snakeCase (getSingularName yml) }}) => { // eslint-disable-line camelcase
+			if (!{{ snakeCase (getSingularName yml) }}) return reject(new Error('{{titleCase (getSingularName yml)}} Not found')) // eslint-disable-line camelcase
+			{{ snakeCase (getSingularName yml) }}.destroy()
 				.then((result) => {
 					resolve(result)
 				})

@@ -8,7 +8,7 @@ export default (container) => {
 		get{{ pascalCase (getPluralName yml) }}: [],
 
 		get{{ pascalCase (getSingularName yml) }}: [
-			check('{{ getPKey yml }}', '{{ getPKey yml }} key is missing')
+			check('{{ getPKey yml }}', 'Missing or invalid {{ getPKey yml }}')
 				.exists()
 				.withMessage('{{ getPKey yml }} key is required'),
 		],

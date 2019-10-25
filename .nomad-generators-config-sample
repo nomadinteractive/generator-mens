@@ -1,0 +1,24 @@
+{
+    "sequalize": {
+        "models_path": "models"
+    },
+	"mens": {
+		"controllers_directory": "controllers",
+		"validators_directory": "validators",
+		"database_file": "database.js",
+		"database_file_new_methods_prepend_pattern": "// $Generator: New Database Methods Here",
+		"database_file_exports_prepend_pattern": "\t// $Generator: New Database Methods Exports Here",
+		"docs_tags_file": "docs/tags.js",
+		"docs_tags_file_prepend_pattern": " *   # $Generator: New Tags Here",
+		"docs_parameters_file": "docs/parameters.js",
+		"docs_parameters_file_prepend_pattern": " *     # $Generator: New Parameters Here",
+		"routes_file": "routes.js",
+		"routes_prepend_patterns": {
+			"controllers_imports": "// $Generator: New Controllers Imports Here",
+			"validator_imports": "// $Generator: New Validator Imports Here",
+			"controllers_init": "\t// $Generator: New Controllers Init Here",
+			"validator_init": "\t// $Generator: New Validator Init Here",
+			"endpoints"	: "\t// $Generator: New Endpoints Here"
+		}
+	}
+}

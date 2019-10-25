@@ -1,5 +1,5 @@
 {
- "name": "generator-mens",
+ "name": "nomad-generator-mens",
  "version": "1.0.0",
  "description": "",
  "main": "index.js",
@@ -7,6 +7,9 @@
   "generate-crud": "plop crud",
   "check": "nomad-codecheck ./",
   "clean": "npm run check"
+ },
+ "bin": {
+  "nomad-generator-mens": "./bin.js"
  },
  "author": "",
  "license": "ISC",

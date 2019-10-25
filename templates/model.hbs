@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes, globalModelConfig) => {
 			{{#if (not (eq (typeOf allowNull) 'undefined'))}}
 			allowNull: {{ allowNull }},
 			{{else}}
-			allowNull: true, {{!-- default value --}}
+			allowNull: true,
 			{{/if}}
 			{{#if (not (isFalsey defaultValue))}}
 			defaultValue: '{{ defaultValue }}',
@@ -34,10 +34,10 @@ module.exports = (sequelize, DataTypes, globalModelConfig) => {
 		{{/each}}
 	}, globalModelConfig)
 
-	Model.associate = (models) => {
-		// TODO: Define model relationships
-		// Model.belongsTo(models.Users, { foreignKey: 'user_id', as: 'User' })
-	}
+	// TODO: Define model relationships or clean up this section
+	// Model.associate = (models) => {
+	// Model.belongsTo(models.Users, { foreignKey: 'user_id', as: 'User' })
+	// }
 
 	return Model
 }
