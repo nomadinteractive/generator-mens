@@ -169,10 +169,7 @@ export default (container) => {
 			}
 
 			new Promise((resolve, reject) => {
-				db.update{{ pascalCase (getSingularName yml) }}({
-					{{ getPKey yml }},
-					values: req.body
-				})
+				db.update{{ pascalCase (getSingularName yml) }}({{ getPKey yml }}, req.body)
 					.then(() => {
 						resolve(true)
 					})
