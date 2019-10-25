@@ -28,7 +28,7 @@ export default (container) => {
 			}
 
 			// eslint-disable-next-line camelcase
-			db.get{{ pascalCase (getPluralName yml) }}().then(({{ snakCase (getPluralName yml) }}) => {
+			db.get{{ pascalCase (getPluralName yml) }}().then(({{ snakeCase (getPluralName yml) }}) => {
 				res.json({
 					code: 0,
 					{{ snakeCase (getPluralName yml) }}
