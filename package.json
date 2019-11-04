@@ -11,7 +11,7 @@
  "bin": {
   "nomad-generator-mens": "./bin.js"
  },
- "author": "",
+ "author": "Fatih Yildiz <fatih@nomadinteractive.co>",
  "license": "ISC",
  "dependencies": {
   "plop": "^2.5.2",
