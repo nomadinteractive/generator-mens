@@ -1,7 +1,7 @@
 {
- "name": "nomad-generator-mens",
- "version": "1.0.0",
- "description": "",
+ "name": "@nomadinteractive/generator-mens",
+ "version": "1.0.1",
+ "description": "MENS Stack API model and CRUD endpoints generator with PlopJS",
  "main": "index.js",
  "scripts": {
   "generate-crud": "plop crud",
@@ -11,8 +11,9 @@
  "bin": {
   "nomad-generator-mens": "./bin.js"
  },
- "author": "",
- "license": "ISC",
+ "repository": "github:nomadinteractive/generator-mens",
+ "author": "Nomad Interactive <hello@nomadinteractive.co>",
+ "license": "MIT",
  "dependencies": {
   "plop": "^2.5.2",
   "handlebars-helpers": "^0.10.0",
@@ -20,13 +21,13 @@
  },
  "devDependencies": {
   "@commitlint/cli": "^8.2.0",
-  "commitlint-config-nomad": "git+ssh://git@ship.nomadinteractive.co:nomad-interactive/commitlint-config-nomad.git",
+  "@nomadinteractive/commitlint-config": "1.0.3",
   "husky": "^3.0.9",
-  "nomad-codecheck": "git+ssh://git@ship.nomadinteractive.co:nomad-interactive/nomad-codecheck.git"
+  "@nomadinteractive/nomad-codecheck": "1.0.37"
  },
  "commitlint": {
   "extends": [
-   "nomad"
+	"@nomadinteractive/commitlint-config"
   ]
  },
  "husky": {
